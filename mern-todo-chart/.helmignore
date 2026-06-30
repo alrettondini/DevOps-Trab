@@ -1,0 +1,21 @@
+# Padrões ignorados ao empacotar o chart.
+.DS_Store
+# Diretórios de VCS
+.git/
+.gitignore
+.bzr/
+.bzrignore
+.hg/
+.hgignore
+.svn/
+# Backups
+*.swp
+*.bak
+*.tmp
+*.orig
+*~
+# IDEs
+.project
+.idea/
+*.tmproj
+.vscode/

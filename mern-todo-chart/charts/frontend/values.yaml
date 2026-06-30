@@ -1,0 +1,6 @@
+replicaCount: 1
+
+image:
+  repository: alrettondini/mern-todo-frontend
+  tag: "latest"
+  pullPolicy: IfNotPresent
