@@ -1,0 +1,88 @@
+#!/bin/bash
+
+load_image() {
+
+    echo "$(echo "Loading")" "$(echo $1)"
+
+    minikube image load $1
+
+    echo "$(echo "Loaded")" "$(echo $1)"
+}
+
+build_images() {
+
+    ################################################
+    # Gerando a imagem docker do backend
+    ################################################
+
+    cd server
+
+    # eval ${minikube docker-env}
+
+    docker build . -t alrettondini/mern-todo-backend
+
+    load_image alrettondini/mern-todo-backend
+
+    cd ..
+
+    ################################################
+    # Gerando a imagem docker do frontend
+    ################################################
+
+    cd client
+
+    # eval ${minikube docker-env}
+
+    docker build . -t alrettondini/mern-todo-frontend
+
+    load_image alrettondini/mern-todo-frontend
+
+    cd ..
+}
+
+init_minikube() {
+
+    ################################################
+    # Inicializando o Minikube
+    ################################################
+
+    minikube start --cpus=4 --memory=6g
+
+    ################################################
+    # Habilitando o Ingress
+    ################################################
+
+    minikube addons enable ingress
+
+    ################################################
+    # Inicializando o DashBoard
+    ################################################
+
+    minikube addons enable dashboard
+
+    minikube addons enable metrics-server
+
+    minikube dashboard &
+}
+
+################################################
+# Verificando flag -ib
+################################################
+
+while getopts ":ib" option; do
+   case $option in
+      i) # inicializando minikube
+         init_minikube
+         load_image mongo:7.0
+         ;;
+      b) # imagens backend e frontend
+         build_images
+         ;;
+   esac
+done
+
+################################################
+# Instalando via helm
+################################################
+
+helm install mern-todo mern-todo-chart
